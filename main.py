@@ -6,7 +6,7 @@ import matplotlib.colors as mcolors
 
 
 class StocksMaster:
-    def __init__(self, data, scanning_days):
+    def __init__(self, data, stocks_df, scanning_days):
         self.stocks_percentage: dict = {}
         self.data: pd.DataFrame = data
         self.scanning_days: int = scanning_days
@@ -17,12 +17,13 @@ class StocksMaster:
         self.second_place_stocks: list
         self.top_stocks: list
         self.print_start_end_days: bool = True
+        self.stocks_df: pd.DataFrame = stocks_df
 
     class Config:
         arbitrary_types_allowed = True
 
     def get_stocks_above_avg(self, avg_day):
-        close_to_day_avg = pd.DataFrame()
+        df_columns = self.stocks_df.columns
 
         for stock in stocks:
             df = data['Close'][stock].copy()  # Make a copy of the DataFrame to avoid SettingWithCopyWarning
@@ -35,22 +36,20 @@ class StocksMaster:
                     avg_df <= (df[f'{avg_day}_day_avg'] * 1.04))]
             avg_df = avg_df[avg_df.index >= last_date]
             if len(avg_df) > 0:
+                self.calculate_percentage_changed(stock_prices=past_days_df, stock=stock)
                 match avg_day:
                     case 20:
-                        self.calculate_percentage_changed(stock_prices=past_days_df, stock=stock)
                         self.stocks_near_avg20.append(stock)
                     case 50:
-                        self.calculate_percentage_changed(stock_prices=past_days_df, stock=stock)
                         self.stocks_near_avg50.append(stock)
                     case 150:
-                        self.calculate_percentage_changed(stock_prices=past_days_df, stock=stock)
                         self.stocks_near_avg150.append(stock)
                     case 200:
-                        self.calculate_percentage_changed(stock_prices=past_days_df, stock=stock)
                         self.stocks_near_avg200.append(stock)
-                avg_df['Symbol'] = stock
-                close_to_day_avg = pd.concat([close_to_day_avg, avg_df])
-        close_to_day_avg.to_excel(f"stocks_above_{avg_day}_day_avg.xlsx")
+                self.stocks_df[stock] = avg_df
+        self.stocks_df = self.stocks_df.dropna(axis=1)
+        self.stocks_df.to_excel(f"stocks_above_{avg_day}_day_avg.xlsx")
+        self.stocks_df = pd.DataFrame(columns=df_columns)
 
     def calculate_percentage_changed(self, stock_prices, stock):
         start_price = stock_prices.iloc[0]
@@ -145,8 +144,8 @@ if __name__ == '__main__':
         'UTHR', 'BLUE', 'ILMN', 'NBIX', 'ALNY', 'INCY', 'BIIB', 'EXAS',
         'GH', 'CDNA', 'PACB', 'VCEL', 'CGEN', 'ONVO'
     ]
-
     # Fetch historical stock price data
     data = yf.download(stocks, start='2023-01-01', end=datetime.today())
-    stock_instance = StocksMaster(data=data, scanning_days=5)
+    stocks_df = pd.DataFrame(columns=stocks)
+    stock_instance = StocksMaster(data=data,stocks_df=stocks_df, scanning_days=5)
     stock_instance.find_me_some_stocks()
