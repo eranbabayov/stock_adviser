@@ -47,7 +47,7 @@ class StocksMaster:
                     case 200:
                         self.stocks_near_avg200.append(stock)
                 self.stocks_df[stock] = avg_df
-        self.stocks_df = self.stocks_df.dropna(axis=1)
+        self.stocks_df = self.stocks_df.dropna(axis=1, how='all')
         self.stocks_df.to_excel(f"stocks_above_{avg_day}_day_avg.xlsx")
         self.stocks_df = pd.DataFrame(columns=df_columns)
 
@@ -79,7 +79,8 @@ class StocksMaster:
         top_stocks_with_max_percentage_change = {}
         for stock in self.top_stocks:
             top_stocks_with_max_percentage_change[stock] = self.stocks_percentage[stock]
-        top_stocks_with_max_percentage_change = sorted(top_stocks_with_max_percentage_change.items(), key=lambda item: item[1], reverse=True)
+        top_stocks_with_max_percentage_change = sorted(top_stocks_with_max_percentage_change.items(),
+                                                       key=lambda item: item[1], reverse=True)
 
         # Plot for top stocks
         for i, stock in enumerate(top_stocks_with_max_percentage_change[:5]):
@@ -140,12 +141,12 @@ if __name__ == '__main__':
         'ANET', 'TYL', 'FTV', 'ZS', 'BR', 'DDOG', 'TWLO', 'OKTA', 'AYX', 'PANW',
         'NOW', 'NET', 'CRWD', 'SPLK', 'DOCU', 'PINS', 'ZM', 'ROKU', 'SNOW', 'SHOP',
         'SQ', 'UBER', 'LYFT', 'SPOT', 'GME', 'FSLY', 'PTON', 'CRSP', 'NVTA',
-        'TDOC', 'EDIT', 'REGN', 'IONS', 'BEAM', 'CERS', 'AMGN', 'BMRN', 'VRTX',
+        'TDOC', 'EDIT', 'REGN', 'IONS', 'BEAM', 'CERS', 'BMRN', 'VRTX',
         'UTHR', 'BLUE', 'ILMN', 'NBIX', 'ALNY', 'INCY', 'BIIB', 'EXAS',
         'GH', 'CDNA', 'PACB', 'VCEL', 'CGEN', 'ONVO'
     ]
     # Fetch historical stock price data
     data = yf.download(stocks, start='2023-01-01', end=datetime.today())
     stocks_df = pd.DataFrame(columns=stocks)
-    stock_instance = StocksMaster(data=data,stocks_df=stocks_df, scanning_days=5)
+    stock_instance = StocksMaster(data=data, stocks_df=stocks_df, scanning_days=5)
     stock_instance.find_me_some_stocks()
