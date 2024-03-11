@@ -140,7 +140,7 @@ if __name__ == '__main__':
         'NTAP', 'CDW', 'KEYS', 'FTNT', 'ZBRA', 'TER', 'FFIV', 'SNPS', 'FLT', 'GDDY',
         'ANET', 'TYL', 'FTV', 'ZS', 'BR', 'DDOG', 'TWLO', 'OKTA', 'AYX', 'PANW',
         'NOW', 'NET', 'CRWD', 'SPLK', 'DOCU', 'PINS', 'ZM', 'ROKU', 'SNOW', 'SHOP',
-        'SQ', 'UBER', 'LYFT', 'SPOT', 'GME', 'FSLY', 'PTON', 'CRSP', 'NVTA',
+        'SQ', 'UBER', 'LYFT', 'SPOT', 'GME', 'FSLY', 'PTON', 'CRSP',
         'TDOC', 'EDIT', 'REGN', 'IONS', 'BEAM', 'CERS', 'BMRN', 'VRTX',
         'UTHR', 'BLUE', 'ILMN', 'NBIX', 'ALNY', 'INCY', 'BIIB', 'EXAS',
         'GH', 'CDNA', 'PACB', 'VCEL', 'CGEN', 'ONVO'
