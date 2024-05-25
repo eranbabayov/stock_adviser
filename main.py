@@ -3,10 +3,12 @@ import yfinance as yf
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
+import json
 
 
 class StocksMaster:
     def __init__(self, data, stocks_df, scanning_days):
+        self.top_stocks = None
         self.stocks_percentage: dict = {}
         self.data: pd.DataFrame = data
         self.scanning_days: int = scanning_days
@@ -64,14 +66,13 @@ class StocksMaster:
         self.stocks_percentage = dict(sorted(self.stocks_percentage.items(), key=lambda item: item[1], reverse=True))
 
         # Extract the top stocks
-        self.top_stocks = list(set(self.stocks_near_avg20) & set(self.stocks_near_avg50) & set(
-            self.stocks_near_avg150) & set(self.stocks_near_avg200))
+        self.top_stocks = list(set(self.stocks_near_avg150) & set(self.stocks_near_avg200))
 
         print("Top Stocks :", *self.top_stocks)
         # print("Second Place Stocks:", *self.second_place_stocks)
         print(f"stocks percentage change in the past {self.scanning_days} days: {self.stocks_percentage}")
 
-    def save_stocks_to_plt(self):
+    def save_stocks_plt(self):
         # Define colors for each stock
         fig, axes = plt.subplots(nrows=5, ncols=1, figsize=(12, 20))
         colors = list(mcolors.TABLEAU_COLORS.values())
@@ -110,43 +111,20 @@ class StocksMaster:
         plt.clf()
 
     def find_me_some_stocks(self):
-        self.get_stocks_above_avg(avg_day=20)
-        self.get_stocks_above_avg(avg_day=50)
+        # self.get_stocks_above_avg(avg_day=20)
+        # self.get_stocks_above_avg(avg_day=50)
         self.get_stocks_above_avg(avg_day=150)
         self.get_stocks_above_avg(avg_day=200)
         self.find_best_stocks()
-        self.save_stocks_to_plt()
+        self.save_stocks_plt()
 
 
 if __name__ == '__main__':
     # Define a list of tech stock symbols
-    stocks = [
-        'SPY', 'QQQ', 'AAPL', 'MSFT', 'GOOG', 'AMZN', 'META', 'ARKK', 'PLTR', 'TSLA',
-        'COIN', 'XPEV', 'AFRM', 'UPST', 'MARA', 'NFLX', 'NVDA', 'AMD', 'DIS', 'ROKU',
-        'SHOP', 'U', 'ABNB', 'CRWD', 'MELI', 'TSM', 'PATH', 'DLO', 'PYPL', 'ADBE',
-        'HD', 'RCL', 'V', 'UNH', 'UBER', 'BRK-B', 'JPM', 'JNJ', 'PG', 'HD', 'MA', 'V',
-        'CMCSA', 'VZ', 'XOM', 'CRM', 'PFE', 'INTC', 'CSCO', 'WMT', 'MRK', 'T', 'ABT',
-        'BABA', 'BMY', 'NVS', 'ORCL', 'CVX', 'DHR', 'ASML', 'NKE', 'TMO', 'KO', 'MCD',
-        'AVGO', 'TMUS', 'QCOM', 'LLY', 'SBUX', 'NVO', 'ACN', 'TXN', 'PM', 'UNP', 'IBM',
-        'AMGN', 'CHTR', 'LIN', 'COST', 'ABBV', 'INTU', 'DEO', 'DUK', 'NEE', 'FIS', 'CAT',
-        'MMM', 'LMT', 'UPS', 'RTX', 'NOW', 'LOW', 'RY', 'COP', 'GS', 'HON', 'BLK', 'MMC',
-        'BKNG', 'CMG', 'SPGI', 'ISRG', 'ZTS', 'MO', 'BA', 'FDX', 'CVS', 'D', 'PEP', 'SRE',
-        'MCO', 'SNY', 'ECL', 'TM', 'ICE', 'BUD', 'VLO', 'DOW', 'CI', 'CSX', 'WBA',
-        'HUM', 'BDX', 'WM', 'LHX', 'NEM', 'DOCU', 'JCI', 'AMAT', 'SQ',
-        'EPAM', 'TRMB', 'AAL', 'PLUG', 'Z', 'GILD', 'HAL', 'SCHW', 'TDOC', 'PDD',
-        'GE', 'EBAY', 'ZM', 'DDOG', 'SNAP', 'DAL', 'UAL', 'SLB', 'FCX', 'GM', 'MS', 'INVZ',
-        'SNOW', 'LUV', 'SOFI', 'MU', 'ADI', 'KLAC', 'WDC', 'SWKS', 'QRVO', 'LRCX', 'MPWR',
-        'ASML', 'CDNS', 'AVGO', 'QCOM', 'NXPI', 'MCHP', 'APH', 'ANSS', 'VRSN', 'TTWO',
-        'NTAP', 'CDW', 'KEYS', 'FTNT', 'ZBRA', 'TER', 'FFIV', 'SNPS', 'FLT', 'GDDY',
-        'ANET', 'TYL', 'FTV', 'ZS', 'BR', 'DDOG', 'TWLO', 'OKTA', 'AYX', 'PANW',
-        'NOW', 'NET', 'CRWD', 'SPLK', 'DOCU', 'PINS', 'ZM', 'ROKU', 'SNOW', 'SHOP',
-        'SQ', 'UBER', 'LYFT', 'SPOT', 'GME', 'FSLY', 'PTON', 'CRSP',
-        'TDOC', 'EDIT', 'REGN', 'IONS', 'BEAM', 'CERS', 'BMRN', 'VRTX',
-        'UTHR', 'BLUE', 'ILMN', 'NBIX', 'ALNY', 'INCY', 'BIIB', 'EXAS',
-        'GH', 'CDNA', 'PACB', 'VCEL', 'CGEN', 'ONVO'
-    ]
+    with open("stocks.json", "r") as file:
+        stocks = json.load(file)["stocks"]
     # Fetch historical stock price data
     data = yf.download(stocks, start='2023-01-01', end=datetime.today())
     stocks_df = pd.DataFrame(columns=stocks)
-    stock_instance = StocksMaster(data=data, stocks_df=stocks_df, scanning_days=5)
+    stock_instance = StocksMaster(data=data, stocks_df=stocks_df, scanning_days=10)
     stock_instance.find_me_some_stocks()

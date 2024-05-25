@@ -1,0 +1,27 @@
+{
+  "stocks": [
+    "SPY", "QQQ", "AAPL", "MSFT", "GOOG", "AMZN", "META", "ARKK", "PLTR", "TSLA",
+    "COIN", "XPEV", "AFRM", "UPST", "MARA", "NFLX", "NVDA", "AMD", "DIS", "ROKU",
+    "SHOP", "U", "ABNB", "CRWD", "MELI", "TSM", "PATH", "DLO", "PYPL", "ADBE",
+    "HD", "RCL", "V", "UNH", "UBER", "BRK-B", "JPM", "JNJ", "PG", "HD", "MA", "V",
+    "CMCSA", "VZ", "XOM", "CRM", "PFE", "INTC", "CSCO", "WMT", "MRK", "T", "ABT",
+    "BABA", "BMY", "NVS", "ORCL", "CVX", "DHR", "ASML", "NKE", "TMO", "KO", "MCD",
+    "AVGO", "TMUS", "QCOM", "LLY", "SBUX", "NVO", "ACN", "TXN", "PM", "UNP", "IBM",
+    "AMGN", "CHTR", "LIN", "COST", "ABBV", "INTU", "DEO", "DUK", "NEE", "FIS", "CAT",
+    "MMM", "LMT", "UPS", "RTX", "NOW", "LOW", "RY", "COP", "GS", "HON", "BLK", "MMC",
+    "BKNG", "CMG", "SPGI", "ISRG", "ZTS", "MO", "BA", "FDX", "CVS", "D", "PEP", "SRE",
+    "MCO", "SNY", "ECL", "TM", "ICE", "BUD", "VLO", "DOW", "CI", "CSX", "WBA",
+    "HUM", "BDX", "WM", "LHX", "NEM", "DOCU", "JCI", "AMAT", "SQ",
+    "EPAM", "TRMB", "AAL", "PLUG", "Z", "GILD", "HAL", "SCHW", "TDOC", "PDD",
+    "GE", "EBAY", "ZM", "DDOG", "SNAP", "DAL", "UAL", "SLB", "FCX", "GM", "MS", "INVZ",
+    "SNOW", "LUV", "SOFI", "MU", "ADI", "KLAC", "WDC", "SWKS", "QRVO", "LRCX", "MPWR",
+    "ASML", "CDNS", "AVGO", "QCOM", "NXPI", "MCHP", "APH", "ANSS", "VRSN", "TTWO",
+    "NTAP", "CDW", "KEYS", "FTNT", "ZBRA", "TER", "FFIV", "SNPS", "FLT", "GDDY",
+    "ANET", "TYL", "FTV", "ZS", "BR", "DDOG", "TWLO", "OKTA", "PANW",
+    "NOW", "NET", "CRWD", "DOCU", "PINS", "ZM", "ROKU", "SNOW", "SHOP",
+    "SQ", "UBER", "LYFT", "SPOT", "GME", "FSLY", "PTON", "CRSP",
+    "TDOC", "EDIT", "REGN", "IONS", "BEAM", "CERS", "BMRN", "VRTX",
+    "UTHR", "BLUE", "ILMN", "NBIX", "ALNY", "INCY", "BIIB", "EXAS",
+    "GH", "CDNA", "PACB", "VCEL", "CGEN", "ONVO"
+  ]
+}
