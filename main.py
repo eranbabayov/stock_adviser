@@ -34,8 +34,11 @@ class StocksMaster:
             last_date = datetime.now() - timedelta(days=self.scanning_days)
             avg_df = df[df.index.isin(df[f'{avg_day}_day_avg'].index)]
             past_days_df = avg_df[avg_df.index >= last_date]
-            avg_df = avg_df[(avg_df >= (df[f'{avg_day}_day_avg'])) & (
-                    avg_df <= (df[f'{avg_day}_day_avg'] * 1.04))]
+            try:
+                avg_df = avg_df[(avg_df >= (df[f'{avg_day}_day_avg'])) & (
+                        avg_df <= (df[f'{avg_day}_day_avg'] * 1.04))]
+            except Exception as e:
+                print(f"There is an issue in stock: {stock}")
             avg_df = avg_df[avg_df.index >= last_date]
             if len(avg_df) > 0:
                 self.calculate_percentage_changed(stock_prices=past_days_df, stock=stock)
