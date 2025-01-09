@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Set New Password</title>
+
+</head>
+<body>
+<div class="container">
+    <h3>Set New Password</h3>
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+    <div class="alert-danger">
+        {{ message }}
+    </div>
+    {% endfor %}
+    
+    <form action="{{ url_for('set_new_pwd') }}" method="POST">
+        {% if not emailReset %}
+        <label for="new_pwd">Old Password</label>
+        <input type="password" name="old_pwd" placeholder="Old Password" required>
+        {% endif %}
+        <label for="new_pwd">Set new Password</label>
+        <input type="password" name="new_pwd" placeholder="New Password" required>
+        <input type="submit" value="Submit">
+    </form>
+    
+
+
+</div>
+</body>
+</html>

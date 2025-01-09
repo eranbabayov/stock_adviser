@@ -2,3 +2,5 @@
 *.xml
 *.iml
 *.xlsx
+.env
+/__pycache__

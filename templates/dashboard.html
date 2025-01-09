@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Dashboard</title>
+</head>
+<body>
+
+<div class="container">
+    <h1>Welcome, {{ username }}!</h1>
+    <br><br>
+
+{% if failed_msg %}
+    <div class="alert alert-danger" id="error-alert">
+        <strong>Error!</strong> {{ failed_msg }}
+        <span class="close-btn" onclick="closeAlert('error-alert')">&times;</span>
+    </div>
+{% endif %}
+
+{% if success_msg %}
+    <div class="alert alert-success" id="success-alert">
+        <strong>Success!</strong> {{ success_msg }}
+        <span class="close-btn" onclick="closeAlert('success-alert')">&times;</span>
+    </div>
+{% endif %}
+
+    {% if not stocks %}
+        <h2>Please add stocks to your account</h2>
+    {% endif %}
+    <br><br>
+    <label for="add_stock">Add stock to the list:</label>
+    <form action="{{ url_for('add_stock') }}" method="POST">
+        <input type="text" name="add_stock" placeholder="Write stock ticker" required>
+        <br><br>
+        <button class="button" type="submit">Add stock</button>
+    </form>
+
+    <br><br>
+    <a href="{{ url_for('logout') }}">
+        <button class="button" type="submit">Logout</button>
+    </a>
+    <br><br>
+
+    <a href="{{ url_for('set_new_pwd') }}">
+        <button class="button" type="submit">Change my password</button>
+    </a>
+    <br><br>
+</div>
+
+<!-- Watchlist Section -->
+{% if watchlist %}
+<div class="watchlist-container">
+    <h2>My Watchlist</h2>
+    <div class="watchlist">
+        <!-- Fixed Header -->
+        <div class="watchlist-header">
+            <span>Symbol</span>
+            <span>Last</span>
+            <span>Chg</span>
+            <span>Chg%</span>
+        </div>
+
+        <!-- Scrollable Content -->
+        <div class="watchlist-content">
+            {% for watchlist_stock in watchlist %}
+                <div class="watchlist-row">
+                    <span class="symbol">
+                        <a href="/stock/{{ watchlist_stock.symbol }}" target="_blank">{{ watchlist_stock.symbol }}</a>
+                    </span>
+                    <span class="last">{{ watchlist_stock.last_price }}</span>
+                    <span class="chg {% if watchlist_stock.change > 0 %}positive{% elif watchlist_stock.change < 0 %}negative{% endif %}">
+                        {{ watchlist_stock.change }}
+                    </span>
+                    <span class="chg-percent {% if watchlist_stock.change_percent > 0 %}positive{% elif watchlist_stock.change_percent < 0 %}negative{% endif %}">
+                        {{ watchlist_stock.change_percent }}%
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+</body>
+</html>
+
+<script>
+window.onload = function() {
+    var errorAlert = document.getElementById('error-alert');
+    if (errorAlert) {
+        // Add the "show" class to slide the alert in
+        errorAlert.classList.add('show');
+    }
+
+    var successAlert = document.getElementById('success-alert');
+    if (successAlert) {
+        // Add the "show" class to slide the alert in
+        successAlert.classList.add('show');
+    }
+};
+
+// Function to close the alert
+function closeAlert(alertId) {
+    var alert = document.getElementById(alertId);
+    alert.classList.remove('show'); // Remove the "show" class to fade the alert out
+}
+
+</script>
