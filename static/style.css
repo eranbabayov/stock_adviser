@@ -11,8 +11,8 @@ p {
   text-align: center
 }
 body {
+  background-image: url('stock.jpg'); /* Relative to the CSS file's location */
   font-family: Arial, sans-serif;
-  background-color: #68c7ff;
   margin: 0;
   padding: 0;
   background-repeat: no-repeat;

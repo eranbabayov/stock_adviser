@@ -9,9 +9,6 @@
 <body>
 
 <div class="container">
-    <h1>Welcome, {{ username }}!</h1>
-    <br><br>
-
 {% if failed_msg %}
     <div class="alert alert-danger" id="error-alert">
         <strong>Error!</strong> {{ failed_msg }}
@@ -52,7 +49,7 @@
 <!-- Watchlist Section -->
 {% if watchlist %}
 <div class="watchlist-container">
-    <h2>My Watchlist</h2>
+    <h2>{{ username }} watchlist</h2>
     <div class="watchlist">
         <!-- Fixed Header -->
         <div class="watchlist-header">

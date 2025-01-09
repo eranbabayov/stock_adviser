@@ -13,7 +13,7 @@ failed_login_attempts = {}
 blocked_ips = {}
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
@@ -145,7 +145,7 @@ def register():
         user_id = get_user_data_from_db(username=new_username)['user_id']
         session['username'] = new_username
         session['user_id'] = user_id
-        return redirect(url_for('login', user_added="user added"))
+        return redirect(url_for('/', user_added="user added"))
 
     return render_template('register.html')
 
@@ -178,17 +178,17 @@ def set_new_pwd():
                     return redirect(url_for('set_new_pwd', _method='GET'))
 
                 if change_user_password_in_db(user_email, new_password):
-                    return redirect(url_for('login', password_changed=True))
+                    return redirect(url_for('/', password_changed=True))
 
             else:  # reset from email
                 if not validate_password(new_password):
                     return redirect(url_for('set_new_pwd', emailReset=True))
                 if change_user_password_in_db(user_email, new_password):
-                    return redirect(url_for('login', password_changed=True))
+                    return redirect(url_for('/', password_changed=True))
                 return redirect(url_for('set_new_pwd', emailReset=True))
 
     return render_template('set_new_pwd.html', emailReset=request.args.get('emailReset'))
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5000)

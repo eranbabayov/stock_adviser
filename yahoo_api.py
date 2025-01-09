@@ -23,7 +23,7 @@ def get_stock_data_from_yahoo(stocks: list[str], start_date: datetime, end_date:
 
     return data
 
-def get_stock_data(symbols):
+def get_last_day_stock_data(symbols):
     stock_data = []
     for symbol in symbols:
         try:
@@ -61,7 +61,7 @@ def get_stock_close(yahoo_stocks_data, requested_stocks: list[str]):
             sorted(stock_data.items(), key=lambda x: datetime.strptime(x[0], '%Y-%m-%d'), reverse=True))
 
         stocks_close[stock] = sorted_stock_data
-        stocks_data.append(get_stock_data([stock])[0])  # Get the stock data for the current stock
+        stocks_data.append(get_last_day_stock_data([stock])[0])  # Get the stock data for the current stock
 
     return stocks_close, stocks_data
 
