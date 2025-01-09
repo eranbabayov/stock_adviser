@@ -145,6 +145,13 @@ form .button {
   margin: 20px auto;
 }
 
+label[for="add_stock"] {
+  color: white; /* Change to your desired color */
+  font-size: 16px; /* Optional: Adjust font size */
+  font-weight: bold; /* Optional: Make it bold */
+}
+
+
 p a {
   text-decoration: none;
   font-size: 14px;
@@ -298,7 +305,7 @@ svg {
     border: 1px solid #ccc;
     padding: 15px;
     border-radius: 8px;
-    background-color: #f9f9f9;
+    background-color: #92a8d1;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000; /* Keep it above other content */
     font-family: Arial, sans-serif;
