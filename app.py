@@ -194,7 +194,7 @@ def set_new_pwd():
 @app.route('/stock/<symbol>', methods=['GET'])
 def get_stock_data(symbol):
     print("hereee 1")
-    stocks_close, _ = get_user_stocks_info([symbol], start_delta=100)
+    stocks_close, _ = get_user_stocks_info([symbol], start_delta=365)
     print("hereee 2")
 
     return jsonify(stocks_close)
