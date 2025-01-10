@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_mail import Mail
 from app_configuration import app_configuration
 import random
@@ -155,6 +155,7 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
+
 @app.route('/set_new_pwd', methods=['GET', 'POST'])
 def set_new_pwd():
     user_data = session.get('user_data')
@@ -188,6 +189,16 @@ def set_new_pwd():
                 return redirect(url_for('set_new_pwd', emailReset=True))
 
     return render_template('set_new_pwd.html', emailReset=request.args.get('emailReset'))
+
+
+@app.route('/stock/<symbol>', methods=['GET'])
+def get_stock_data(symbol):
+    print("hereee 1")
+    stocks_close, _ = get_user_stocks_info([symbol], start_delta=100)
+    print("hereee 2")
+
+    return jsonify(stocks_close)
+
 
 
 if __name__ == '__main__':

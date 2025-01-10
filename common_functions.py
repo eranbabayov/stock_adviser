@@ -220,9 +220,9 @@ def check_if_reset_token_exists(reset_token):
         return cursor.fetchone()
 
 
-def get_user_stocks_info(user_stocks: list):
-    start = datetime.today() - timedelta(days=7)
-    finish = datetime.today()- timedelta(days=5)
+def get_user_stocks_info(user_stocks: list, start_delta: int|None = None):
+    start = datetime.today() - timedelta(days=start_delta) if start_delta else datetime.today() - timedelta(days=1)
+    finish = datetime.today()
     stock_data = get_stock_data_from_yahoo(user_stocks, start, finish)
     stocks_close, watchlist_data = get_stock_close(stock_data, user_stocks)
     print(watchlist_data)

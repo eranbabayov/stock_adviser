@@ -1,0 +1,100 @@
+/* Watchlist Styles */
+.watchlist-container {
+    position: fixed; /* Fixed in the viewport */
+    top: 20px;       /* Distance from the top */
+    right: 20px;     /* Distance from the right */
+    width: 300px;    /* Width of the watchlist */
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #92a8d1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Keep it above other content */
+    font-family: Arial, sans-serif;
+}
+
+.watchlist {
+    display: grid;
+    grid-template-rows: auto 1fr; /* Separate header and content */
+    gap: 10px;
+}
+
+.watchlist-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr; /* Four columns for Symbol, Last, Chg, Chg% */
+    font-weight: bold;
+    text-align: center;
+}
+
+.watchlist-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr; /* Match header columns */
+    gap: 5px;
+    max-height: 300px; /* Scrollable area height */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    scrollbar-width: thin; /* Thinner scrollbar for modern browsers */
+    scrollbar-color: #ccc transparent; /* Custom scrollbar colors */
+}
+
+.watchlist-content::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+}
+
+.watchlist-content::-webkit-scrollbar-thumb {
+    background: #ccc; /* Color of the scrollbar thumb */
+    border-radius: 4px;
+}
+
+.watchlist-content::-webkit-scrollbar-thumb:hover {
+    background: #aaa; /* Darker thumb on hover */
+}
+
+.watchlist-row {
+    display: contents; /* Ensure rows align with grid */
+    text-align: center;
+}
+
+.symbol a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+.symbol a:hover {
+    color: #0056b3;
+}
+
+.positive {
+    color: green;
+}
+
+.negative {
+    color: red;
+}
+
+#graph-container {
+    position: fixed;
+    top: 10%; /* Move the container a bit down from the top */
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none;
+    width: 70vw; /* Adjust width to 70% of the viewport width */
+    height: 70vh; /* Adjust height to 70% of the viewport height */
+    max-width: 90vw; /* Optional: you can set a maximum width */
+    max-height: 90vh; /* Optional: you can set a maximum height */
+    overflow: auto;
+    box-sizing: border-box;
+}
+
+
+#stockChart {
+    width: 100%;  /* Makes the chart fit within the container */
+    height: 100%; /* Ensures the chart uses the full height of the container */
+}
+

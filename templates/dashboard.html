@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
     <title>Dashboard</title>
 </head>
 <body>
@@ -64,7 +65,7 @@
             {% for watchlist_stock in watchlist %}
                 <div class="watchlist-row">
                     <span class="symbol">
-                        <a href="/stock/{{ watchlist_stock.symbol }}" target="_blank">{{ watchlist_stock.symbol }}</a>
+                        <a href="#" onclick="showStockGraph('{{ watchlist_stock.symbol }}'); return false;">{{ watchlist_stock.symbol }}</a>
                     </span>
                     <span class="last">{{ watchlist_stock.last_price }}</span>
                     <span class="chg {% if watchlist_stock.change > 0 %}positive{% elif watchlist_stock.change < 0 %}negative{% endif %}">
@@ -80,9 +81,10 @@
 </div>
 {% endif %}
 
-</body>
-</html>
-
+    <div id="graph-container">
+        <canvas id="stockChart"></canvas>
+        <button onclick="hideGraphContainer()">Close</button>
+    </div>
 <script>
 window.onload = function() {
     var errorAlert = document.getElementById('error-alert');
@@ -103,5 +105,72 @@ function closeAlert(alertId) {
     var alert = document.getElementById(alertId);
     alert.classList.remove('show'); // Remove the "show" class to fade the alert out
 }
-
 </script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+let chartInstance = null;  // Declare a variable to store the current chart instance
+
+function showStockGraph(symbol) {
+    fetch(`/stock/${symbol}`)
+        .then(response => response.json())
+        .then(data => {
+            // Get the stock data for the selected symbol
+            const stockData = data[symbol];
+            const dates = Object.keys(stockData);
+            const prices = Object.values(stockData);
+
+            // Destroy the previous chart if it exists
+            if (chartInstance) {
+                chartInstance.destroy();
+                chartInstance = null;  // Clear the reference
+            }
+
+            // Set the canvas size dynamically through JavaScript
+            const canvas = document.getElementById('stockChart');
+            const graphContainer = document.getElementById('graph-container');
+            canvas.width = null;  // Reset width first
+            canvas.height = null; // Reset height first
+            // Set the canvas size dynamically based on the container size
+            canvas.width = graphContainer.offsetWidth;  // Set width to the container's width
+            canvas.height = graphContainer.offsetHeight;  // Set height to the container's height
+
+            // Render the new graph
+            const ctx = canvas.getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: symbol,
+                        data: prices,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: 'Date' } },
+                        y: { title: { display: true, text: 'Price' } }
+                    }
+                }
+            });
+
+            // Call showGraphContainer to make sure the graph container is visible
+            showGraphContainer();
+        })
+        .catch(error => console.error('Error fetching stock data:', error));
+}
+
+function showGraphContainer() {
+    document.getElementById('graph-container').style.display = 'block';
+}
+
+function hideGraphContainer() {
+    document.getElementById('graph-container').style.display = 'none';
+}
+</script>
+</body>
+</html>
