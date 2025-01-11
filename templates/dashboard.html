@@ -51,7 +51,24 @@
         <button class="button" type="submit">Find Good Stocks</button>
     </form>
     {% if stock_above_avg %}
-        <h2>{{stock_above_avg}}</h2>
+        <div class="stock-results">
+            {% for stock_name, stock_avg_data in stock_above_avg.items() %}
+                <div class="stock-card">
+                    <span class="close-btn" onclick="this.parentElement.style.display='none'">&times;</span>
+                    <div class="stock-header">
+                        <strong>{{ stock_name }}</strong>
+                        <span>Above Averages:</span>
+                    </div>
+                    <ul class="stock-list">
+                        {% for avg, above_avg in stock_avg_data.items() %}
+                            {% if above_avg %}
+                                <li>{{ avg }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
 </div>
 

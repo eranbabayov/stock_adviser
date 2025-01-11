@@ -5,10 +5,10 @@
     width: 450px;    /* Width of the container */
     border: 1px solid #ccc;
     padding: 15px;
+    z-index: 10; /* Lower z-index for the container */
     border-radius: 8px;
     background-color: #92a8d1;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000; /* Keep it above other content */
     font-family: Arial, sans-serif;
 }
 
@@ -34,8 +34,61 @@
     border-radius: 8px;
     background-color: #92a8d1;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000; /* Keep it above other content */
+    z-index: 10;
     font-family: Arial, sans-serif;
+    max-height: 650px; /* Scrollable area height */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    scrollbar-width: thin; /* Thinner scrollbar for modern browsers */
+    scrollbar-color: #ccc transparent; /* Custom scrollbar colors */
+}
+.stock-results {
+    margin-top: 20px;
+}
+
+.stock-card {
+    position: relative;
+    margin: 15px 0;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stock-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.stock-list {
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+.stock-list li {
+    font-size: 14px;
+    color: #555;
+    margin-right: 10px; /* Add space between items */
+}
+
+.close-btn {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 18px;
+    color: #888;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.close-btn:hover {
+    color: #ff0000;
 }
 
 /* Watchlist Styles */

@@ -238,14 +238,17 @@ def check_which_stocks_above_avg(stocks: list, stocks_close: dict):
     moving_avg = [20, 50, 150, 200]
     above_which_avg = {}
     for stock in stocks:
-        above_which_avg[stock] = {}
         for avg in moving_avg:
             stocks_moving_avg = calc_moving_avg(stocks_close[stock], avg)
             if list(stocks_moving_avg.values())[-1] < list(stocks_close[stock].values())[0]:
+                if stock not in above_which_avg:
+                    above_which_avg[stock] = {}
                 above_which_avg[stock][str(avg)] = True
-            else:
-                above_which_avg[stock][str(avg)] = False
-    return above_which_avg
+    sorted_above_avg = dict(sorted(above_which_avg.items(),
+                                   key=lambda item: len([v for v in item[1].values() if v is True]),
+                                   reverse=True  # Set reverse=True to sort in descending order
+        ))
+    return sorted_above_avg
 
 
 def check_if_etf_valid(etf: str) -> bool:
