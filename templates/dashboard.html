@@ -45,6 +45,16 @@
     </div>
 </div>
 
+<div class="stocks-info">
+    <label for="find_stocks">Check stocks above averages:</label>
+    <form action="{{ url_for('stocks_above_avg') }}" method="POST" class="form-inline">
+        <button class="button" type="submit">Find Good Stocks</button>
+    </form>
+    {% if stock_above_avg %}
+        <h2>{{stock_above_avg}}</h2>
+    {% endif %}
+</div>
+
 <!-- Watchlist Section -->
 <div class="watchlist-container">
     <h2>{{ username }} watchlist</h2>

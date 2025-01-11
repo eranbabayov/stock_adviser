@@ -1,3 +1,43 @@
+.container {
+    position: fixed; /* Fixed in the viewport */
+    top: 20px;       /* Distance from the top */
+    left: 20px;     /* Distance from the left */
+    width: 450px;    /* Width of the container */
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #92a8d1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Keep it above other content */
+    font-family: Arial, sans-serif;
+}
+
+.form-inline {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between input and button */
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
+.stocks-info {
+    position: fixed; /* Fixed in the viewport */
+    top: 20px;       /* Distance from the top */
+    left: 600px;     /* Distance from the left */
+    width: 450px;    /* Width of the container */
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #92a8d1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Keep it above other content */
+    font-family: Arial, sans-serif;
+}
+
 /* Watchlist Styles */
 .watchlist-container {
     position: fixed; /* Fixed in the viewport */
@@ -84,8 +124,8 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     display: none;
-    width: 70vw; /* Adjust width to 70% of the viewport width */
-    height: 70vh; /* Adjust height to 70% of the viewport height */
+    width: 67vw; /* Adjust width to 70% of the viewport width */
+    height: 80vh; /* Adjust height to 70% of the viewport height */
     max-width: 90vw; /* Optional: you can set a maximum width */
     max-height: 90vh; /* Optional: you can set a maximum height */
     overflow: auto;
@@ -94,7 +134,7 @@
 
 
 #stockChart {
-    width: 100%;  /* Makes the chart fit within the container */
-    height: 100%; /* Ensures the chart uses the full height of the container */
+    width: 90%;  /* Makes the chart fit within the container */
+    height: 90%; /* Ensures the chart uses the full height of the container */
 }
 

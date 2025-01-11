@@ -56,6 +56,15 @@ def login():
         'login.html',
         user_added=request.args.get('user_added'), password_changed=request.args.get("password_changed"))
 
+@app.route('/stocks_above_avg', methods=['POST'])
+def stocks_above_avg():
+    stocks_close, _ = get_user_stocks_info(session['user_stocks'], start_delta=365)
+    stock_above_avg = check_which_stocks_above_avg(stocks=session['user_stocks'], stocks_close=stocks_close)
+    print(stock_above_avg)
+    return render_template('dashboard.html', username=session['username'], stocks=session['user_stocks'],
+                           watchlist=session['watchlist_data'], stock_above_avg=stock_above_avg)
+
+
 
 @app.route('/add_stock', methods=['POST'])
 def add_stock():
