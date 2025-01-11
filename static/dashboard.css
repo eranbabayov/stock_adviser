@@ -37,6 +37,7 @@
     z-index: 10;
     font-family: Arial, sans-serif;
     max-height: 650px; /* Scrollable area height */
+    max-width: 650px; /* Scrollable area height */
     overflow-y: auto;  /* Enable vertical scrolling */
     scrollbar-width: thin; /* Thinner scrollbar for modern browsers */
     scrollbar-color: #ccc transparent; /* Custom scrollbar colors */

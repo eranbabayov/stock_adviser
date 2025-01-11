@@ -46,8 +46,16 @@
 </div>
 
 <div class="stocks-info">
-    <label for="find_stocks">Check stocks above averages:</label>
+<label for="find_stocks">Check stocks above averages:</label>
     <form action="{{ url_for('stocks_above_avg') }}" method="POST" class="form-inline">
+        <label for="avg_selection">Select Average:</label>
+        <select id="avg_selection" name="avg_selection">
+            <option value="20">20 avg</option>
+            <option value="50">50 avg</option>
+            <option value="150">150 avg</option>
+            <option value="200">200 avg</option>
+            <option value="all_avg">All avg (20, 50, 150, 200)</option>
+        </select>
         <button class="button" type="submit">Find Good Stocks</button>
     </form>
     {% if stock_above_avg %}

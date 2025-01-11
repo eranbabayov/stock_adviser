@@ -27,7 +27,7 @@ def get_last_day_stock_data(symbols):
     for symbol in symbols:
         try:
             ticker = yf.Ticker(symbol)
-            data = ticker.history(period='1d')
+            data = ticker.history(period='2d')
             last_price = data['Close'].iloc[-1]  # Get the last close price
             prev_close = data['Close'].iloc[-2] if len(data) > 1 else last_price
             change = last_price - prev_close

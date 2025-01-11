@@ -11,6 +11,7 @@ mail = Mail(app)
 
 failed_login_attempts = {}
 blocked_ips = {}
+ALL_SUPPORT_AVG = [20, 50, 150, 200]
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -56,14 +57,19 @@ def login():
         'login.html',
         user_added=request.args.get('user_added'), password_changed=request.args.get("password_changed"))
 
+
 @app.route('/stocks_above_avg', methods=['POST'])
 def stocks_above_avg():
+    avg_selection = request.form.getlist('avg_selection')
+    if 'all_avg' in avg_selection:
+        avg_selection = ALL_SUPPORT_AVG
+
     stocks_close, _ = get_user_stocks_info(session['user_stocks'], start_delta=365)
-    stock_above_avg = check_which_stocks_above_avg(stocks=session['user_stocks'], stocks_close=stocks_close)
+    stock_above_avg = check_which_stocks_above_avg(stocks=session['user_stocks'], stocks_close=stocks_close,
+                                                   avg_selection=avg_selection)
     print(stock_above_avg)
     return render_template('dashboard.html', username=session['username'], stocks=session['user_stocks'],
                            watchlist=session['watchlist_data'], stock_above_avg=stock_above_avg)
-
 
 
 @app.route('/add_stock', methods=['POST'])
@@ -72,10 +78,12 @@ def add_stock():
     print(f"Form data: {request.form}")  # Debugging line
     user_stocks = session.get('user_stocks', [])  # Fetch the user's stocks from the session (or another source)
     if not stock_to_add or not stock_to_add.isupper() or not check_if_etf_valid(stock_to_add):
-        return render_template('dashboard.html', username=session['username'], stocks=user_stocks,watchlist=session['watchlist_data'],
+        return render_template('dashboard.html', username=session['username'], stocks=user_stocks,
+                               watchlist=session['watchlist_data'],
                                failed_msg="Please type a valid stock etf!!.")
     if stock_to_add in session['user_stocks']:
-        return render_template('dashboard.html', username=session['username'], stocks=user_stocks,watchlist=session['watchlist_data'],
+        return render_template('dashboard.html', username=session['username'], stocks=user_stocks,
+                               watchlist=session['watchlist_data'],
                                failed_msg="The stock etf you entered already exists..")
 
     user_id = session['user_id']
@@ -87,7 +95,7 @@ def add_stock():
     stocks_close, watchlist_data = get_user_stocks_info([stock_to_add])
 
     session['watchlist_data'].append(watchlist_data[0])
-    for stock_name , stock_val in stocks_close.items():
+    for stock_name, stock_val in stocks_close.items():
         session['stocks_close'][stock_name] = stock_val
     return render_template('dashboard.html', username=session['username'], stocks=user_stocks,
                            watchlist=session['watchlist_data']
@@ -100,6 +108,7 @@ def password_reset_token():
         token = request.form.get("token")
         return redirect(url_for('password_change', token=token))
     return render_template('password_reset_token.html')
+
 
 @app.route('/password_reset', methods=['GET', 'POST'])
 def password_reset():
