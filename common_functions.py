@@ -230,5 +230,23 @@ def get_user_stocks_info(user_stocks: list, start_delta: int|None = None):
     return stocks_close, watchlist_data
 
 
+def get_stocks_moving_avg(stocks: list, stocks_close: dict, moving_avg: int):
+    return {stock: calc_moving_avg(stocks_close[stock], moving_avg) for stock in stocks}
+
+
+def check_which_stocks_above_avg(stocks: list, stocks_close: dict):
+    moving_avg = [20, 50, 150, 200]
+    below_which_avg = {}
+    below_which_avg.keys()
+    for stock in stocks:
+        below_which_avg[stock] = {}
+        for avg in moving_avg:
+            stocks_moving_avg = calc_moving_avg(stocks_close[stock], avg)
+            if list(stocks_moving_avg.values())[-1] > list(stocks_close[stock].values())[0]:
+                below_which_avg[stock][str(avg)] = True
+            else:
+                below_which_avg[stock][str(avg)] = False
+
+
 def check_if_etf_valid(etf: str) -> bool:
     return check_etf_valid(etf)

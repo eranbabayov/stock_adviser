@@ -10,45 +10,42 @@
 <body>
 
 <div class="container">
-{% if failed_msg %}
-    <div class="alert alert-danger" id="error-alert">
-        <strong>Error!</strong> {{ failed_msg }}
-        <span class="close-btn" onclick="closeAlert('error-alert')">&times;</span>
-    </div>
-{% endif %}
+    {% if failed_msg %}
+        <div class="alert alert-danger" id="error-alert">
+            <strong>Error!</strong> {{ failed_msg }}
+            <span class="close-btn" onclick="closeAlert('error-alert')">&times;</span>
+        </div>
+    {% endif %}
 
-{% if success_msg %}
-    <div class="alert alert-success" id="success-alert">
-        <strong>Success!</strong> {{ success_msg }}
-        <span class="close-btn" onclick="closeAlert('success-alert')">&times;</span>
-    </div>
-{% endif %}
+    {% if success_msg %}
+        <div class="alert alert-success" id="success-alert">
+            <strong>Success!</strong> {{ success_msg }}
+            <span class="close-btn" onclick="closeAlert('success-alert')">&times;</span>
+        </div>
+    {% endif %}
 
     {% if not stocks %}
         <h2>Please add stocks to your account</h2>
     {% endif %}
     <br><br>
     <label for="add_stock">Add stock to the list:</label>
-    <form action="{{ url_for('add_stock') }}" method="POST">
+    <form action="{{ url_for('add_stock') }}" method="POST" class="form-inline">
         <input type="text" name="add_stock" placeholder="Write stock ticker" required>
-        <br><br>
         <button class="button" type="submit">Add stock</button>
     </form>
 
     <br><br>
-    <a href="{{ url_for('logout') }}">
-        <button class="button" type="submit">Logout</button>
-    </a>
-    <br><br>
-
-    <a href="{{ url_for('set_new_pwd') }}">
-        <button class="button" type="submit">Change my password</button>
-    </a>
-    <br><br>
+    <div class="button-group">
+        <a href="{{ url_for('logout') }}">
+            <button class="button" type="button">Logout</button>
+        </a>
+        <a href="{{ url_for('set_new_pwd') }}">
+            <button class="button" type="button">Change my password</button>
+        </a>
+    </div>
 </div>
 
 <!-- Watchlist Section -->
-{% if watchlist %}
 <div class="watchlist-container">
     <h2>{{ username }} watchlist</h2>
     <div class="watchlist">
@@ -79,11 +76,10 @@
         </div>
     </div>
 </div>
-{% endif %}
 
     <div id="graph-container">
         <canvas id="stockChart"></canvas>
-        <button onclick="hideGraphContainer()">Close</button>
+        <button class="button" onclick="hideGraphContainer()">Close</button>
     </div>
 <script>
 window.onload = function() {
@@ -116,24 +112,26 @@ function showStockGraph(symbol) {
         .then(response => response.json())
         .then(data => {
             // Get the stock data for the selected symbol
-            const stockData = data[symbol];
+            const day20Avg = data.day_20_avg[symbol] || [];   // Handle undefined data
+            const day50Avg = data.day_50_avg[symbol] || [];
+            const day150Avg = data.day_150_avg[symbol] || [];
+            const day200Avg = data.day_200_avg[symbol] || [];
+            const stockData = data.stocks_close[symbol] || {};
+
             const dates = Object.keys(stockData);
             const prices = Object.values(stockData);
 
             // Destroy the previous chart if it exists
             if (chartInstance) {
                 chartInstance.destroy();
-                chartInstance = null;  // Clear the reference
+                chartInstance = null; // Clear the reference
             }
 
-            // Set the canvas size dynamically through JavaScript
+            // Set the canvas size dynamically
             const canvas = document.getElementById('stockChart');
             const graphContainer = document.getElementById('graph-container');
-            canvas.width = null;  // Reset width first
-            canvas.height = null; // Reset height first
-            // Set the canvas size dynamically based on the container size
-            canvas.width = graphContainer.offsetWidth;  // Set width to the container's width
-            canvas.height = graphContainer.offsetHeight;  // Set height to the container's height
+            canvas.width = graphContainer.offsetWidth;
+            canvas.height = graphContainer.offsetHeight;
 
             // Render the new graph
             const ctx = canvas.getContext('2d');
@@ -141,13 +139,47 @@ function showStockGraph(symbol) {
                 type: 'line',
                 data: {
                     labels: dates,
-                    datasets: [{
-                        label: symbol,
-                        data: prices,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        fill: false
-                    }]
+                    datasets: [
+                        {
+                            label: `${symbol} - Prices`,
+                            data: prices,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 2,
+                            fill: false
+                        },
+                        {
+                            label: `${symbol} - 20-Day Avg`,
+                            data: day20Avg,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1,
+                            fill: false,
+                            tension: 0 // Set tension to 0 for a straight line
+                        },
+                        {
+                            label: `${symbol} - 50-Day Avg`,
+                            data: day50Avg,
+                            borderColor: 'rgba(255, 255, 255, 1)',
+                            borderWidth: 1,
+                            fill: false,
+                            tension: 0 // Set tension to 0 for a straight line
+                        },
+                        {
+                            label: `${symbol} - 150-Day Avg`,
+                            data: day150Avg,
+                            borderColor: 'rgba(255, 159, 64, 1)',
+                            borderWidth: 1,
+                            fill: false,
+                            tension: 0 // Set tension to 0 for a straight line
+                        },
+                        {
+                            label: `${symbol} - 200-Day Avg`,
+                            data: day200Avg,
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            fill: false,
+                            tension: 0 // Set tension to 0 for a straight line
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
@@ -163,7 +195,6 @@ function showStockGraph(symbol) {
         })
         .catch(error => console.error('Error fetching stock data:', error));
 }
-
 function showGraphContainer() {
     document.getElementById('graph-container').style.display = 'block';
 }

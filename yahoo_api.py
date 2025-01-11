@@ -1,16 +1,15 @@
 import yfinance as yf
 from datetime import datetime
 
-def calc_20_day_avg(stock_data):
-    moving_avg_20 = {}
-    # Create a sliding window of 20 days
-    sorted_dates = sorted(stock_data.keys(), reverse=True)  # Sort by date in descending order
-    for i in range(len(sorted_dates) - 19):  # Only start after 20 data points
-        window = sorted_dates[i:i + 20]
-        window_avg = sum(stock_data[date] for date in window) / 20
-        moving_avg_20[window[-1]] = window_avg  # Store the average with the last date as key
+def calc_moving_avg(stock_data, moving_avg: int):
+    stocks_moving_avg = {}
+    sorted_dates = sorted(stock_data.keys())  # Sort by date in ascending order
+    for i in range(moving_avg - 1, len(sorted_dates)):  # Start at index moving_avg - 1
+        window = sorted_dates[i - moving_avg + 1:i + 1]  # Take the last `moving_avg` dates
+        window_avg = sum(stock_data[date] for date in window) / moving_avg
+        stocks_moving_avg[sorted_dates[i]] = window_avg  # Store the average with the current date as key
 
-    return moving_avg_20
+    return stocks_moving_avg
 
 
 def get_stock_data_from_yahoo(stocks: list[str], start_date: datetime, end_date: datetime):
@@ -92,7 +91,7 @@ if __name__ == '__main__':
     stocks_close, stocks_data = get_stock_close(data, stocks)
     print(stocks_close)
     print("################################")
-    moving_averages = {stock: calc_20_day_avg(stocks_close[stock]) for stock in stocks}
+    moving_averages = {stock: calc_moving_avg(stocks_close[stock], 20) for stock in stocks}
     print(moving_averages)
     print("#####################")
     print(stocks_data)

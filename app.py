@@ -37,12 +37,13 @@ def login():
             if stocks[0] is None:
                 user_stocks = []
                 watchlist_data = []
+                stocks_close = {}
             else:
                 user_stocks = stocks[0]
-                _, watchlist_data = get_user_stocks_info(user_stocks)
+                stocks_close, watchlist_data = get_user_stocks_info(user_stocks)
 
             session['watchlist_data'] = watchlist_data
-
+            session['stocks_close'] = stocks_close
 
             session['user_stocks'] = user_stocks  # Store the user's stocks in the session
             return render_template('dashboard.html', username=username, stocks=user_stocks, watchlist=watchlist_data)
@@ -74,12 +75,14 @@ def add_stock():
     user_stocks.append(stock_to_add)
     session['user_stocks'] = user_stocks
     print(f"stocks: {user_stocks}")
-    _, watchlist_data = get_user_stocks_info([stock_to_add])
+    stocks_close, watchlist_data = get_user_stocks_info([stock_to_add])
 
     session['watchlist_data'].append(watchlist_data[0])
-
-    return render_template('dashboard.html', username=session['username'], stocks=user_stocks, watchlist=session['watchlist_data'],
-                           success_msg=rf"{stock_to_add} added successfully to your account!")
+    for stock_name , stock_val in stocks_close.items():
+        session['stocks_close'][stock_name] = stock_val
+    return render_template('dashboard.html', username=session['username'], stocks=user_stocks,
+                           watchlist=session['watchlist_data']
+                           , success_msg=rf"{stock_to_add} added successfully to your account!")
 
 
 @app.route("/password_reset_token", methods=["GET", "POST"])
@@ -145,7 +148,7 @@ def register():
         user_id = get_user_data_from_db(username=new_username)['user_id']
         session['username'] = new_username
         session['user_id'] = user_id
-        return redirect(url_for('/', user_added="user added"))
+        return redirect(url_for('login', user_added="user added"))
 
     return render_template('register.html')
 
@@ -193,12 +196,18 @@ def set_new_pwd():
 
 @app.route('/stock/<symbol>', methods=['GET'])
 def get_stock_data(symbol):
-    print("hereee 1")
     stocks_close, _ = get_user_stocks_info([symbol], start_delta=365)
-    print("hereee 2")
-
-    return jsonify(stocks_close)
-
+    day_20_avg = get_stocks_moving_avg([symbol], stocks_close, moving_avg=20)
+    day_50_avg = get_stocks_moving_avg([symbol], stocks_close, moving_avg=50)
+    day_150_avg = get_stocks_moving_avg([symbol], stocks_close, moving_avg=150)
+    day_200_avg = get_stocks_moving_avg([symbol], stocks_close, moving_avg=200)
+    return jsonify({
+        "stocks_close": stocks_close,
+        "day_20_avg": day_20_avg,
+        "day_50_avg": day_50_avg,
+        "day_150_avg": day_150_avg,
+        "day_200_avg": day_200_avg
+    })
 
 
 if __name__ == '__main__':
