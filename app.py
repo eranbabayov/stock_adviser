@@ -74,10 +74,10 @@ def stocks_above_avg():
 
 @app.route('/add_stock', methods=['POST'])
 def add_stock():
-    stock_to_add = request.form.get('add_stock')
+    stock_to_add = request.form.get('add_stock').upper()
     print(f"Form data: {request.form}")  # Debugging line
     user_stocks = session.get('user_stocks', [])  # Fetch the user's stocks from the session (or another source)
-    if not stock_to_add or not stock_to_add.isupper() or not check_if_etf_valid(stock_to_add):
+    if not stock_to_add or not check_if_etf_valid(stock_to_add):
         return render_template('dashboard.html', username=session['username'], stocks=user_stocks,
                                watchlist=session['watchlist_data'],
                                failed_msg="Please type a valid stock etf!!.")
@@ -100,6 +100,28 @@ def add_stock():
     return render_template('dashboard.html', username=session['username'], stocks=user_stocks,
                            watchlist=session['watchlist_data']
                            , success_msg=rf"{stock_to_add} added successfully to your account!")
+
+
+@app.route('/remove_stock', methods=['POST'])
+def remove_stock():
+    stock_to_remove = request.form.get('remove_stock').upper()
+    user_stocks = session.get('user_stocks', [])
+    if stock_to_remove not in session.get('user_stocks', user_stocks):
+        return render_template('dashboard.html', username=session['username'], stocks=user_stocks,
+                               watchlist=session['watchlist_data'],
+                               failed_msg="The stock you requested to remove isnt in your stock list!")
+
+    user_id = session['user_id']
+    remove_stocks_based_to_user_id(user_id=user_id, stock=stock_to_remove)
+    # Optionally update the stocks in session after adding
+    user_stocks.remove(stock_to_remove)
+    session['user_stocks'] = user_stocks
+    print(f"stocks: {user_stocks}")
+    session['watchlist_data'] = remove_stock_from_watchlist(session['watchlist_data'], stock_to_remove)
+    del session['stocks_close'][stock_to_remove]
+    return render_template('dashboard.html', username=session['username'], stocks=user_stocks,
+                           watchlist=session['watchlist_data']
+                           , success_msg=rf"{stock_to_remove} removed successfully from your account!")
 
 
 @app.route("/password_reset_token", methods=["GET", "POST"])
@@ -226,6 +248,14 @@ def get_stock_data(symbol):
         "day_150_avg": day_150_avg,
         "day_200_avg": day_200_avg
     })
+
+
+@app.route('/live_stocks', methods=['GET'])
+def live_stocks():
+    # Example list of stocks to update
+    user_stocks = session.get('user_stocks', [])
+    stock_data = get_last_day_stock_data(user_stocks)
+    return jsonify(stock_data)
 
 
 if __name__ == '__main__':

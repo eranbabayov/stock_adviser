@@ -33,7 +33,10 @@
         <input type="text" name="add_stock" placeholder="Write stock ticker" required>
         <button class="button" type="submit">Add stock</button>
     </form>
-
+    <form action="{{ url_for('remove_stock') }}" method="POST" class="form-inline">
+        <input type="text" name="remove_stock" placeholder="Write stock ticker" required>
+        <button class="button" type="submit">Remove stock</button>
+    </form>
     <br><br>
     <div class="button-group">
         <a href="{{ url_for('logout') }}">
@@ -56,7 +59,7 @@
             <option value="200">200 avg</option>
             <option value="all_avg">All avg (20, 50, 150, 200)</option>
         </select>
-        <button class="button" type="submit">Find Good Stocks</button>
+        <button class="button" type="submit">Find Stocks Above AVG</button>
     </form>
     {% if stock_above_avg %}
         <div class="stock-results">
@@ -238,5 +241,40 @@ function hideGraphContainer() {
     document.getElementById('graph-container').style.display = 'none';
 }
 </script>
+
+<script>
+    function updateStocks() {
+        fetch('/live_stocks')
+            .then(response => response.json())
+            .then(data => {
+                const watchlistContent = document.querySelector('.watchlist-content');
+                if (watchlistContent) {
+                    watchlistContent.innerHTML = ''; // Clear the current content
+
+                    data.forEach(stock => {
+                        const stockRow = document.createElement('div');
+                        stockRow.className = 'watchlist-row';
+
+                        stockRow.innerHTML = `
+                            <span class="symbol">
+                                <a href="#" onclick="showStockGraph('${stock.symbol}'); return false;">${stock.symbol}</a>
+                            </span>
+                            <span class="last">${stock.last_price}</span>
+                            <span class="chg ${stock.change > 0 ? 'positive' : 'negative'}">${stock.change}</span>
+                            <span class="chg-percent ${stock.change_percent > 0 ? 'positive' : 'negative'}">
+                                ${stock.change_percent}%
+                            </span>
+                        `;
+                        watchlistContent.appendChild(stockRow);
+                    });
+                }
+            })
+            .catch(error => console.error('Error updating stocks:', error));
+    }
+
+    // Call updateStocks every 1 seconds
+    setInterval(updateStocks, 1000);
+</script>
+
 </body>
 </html>

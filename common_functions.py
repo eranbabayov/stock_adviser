@@ -51,6 +51,14 @@ def add_stocks_based_to_user_id(user_id: int, stock: str):
         conn.commit()
 
 
+def remove_stocks_based_to_user_id(user_id: int, stock: str):
+    with conn.cursor() as cursor:
+        cursor.execute(
+            "UPDATE users SET stocks = array_remove(stocks, %s) WHERE user_id = %s",
+            (stock, user_id)
+        )
+        conn.commit()
+
 def get_user_salt(user_id):
     with conn.cursor() as cursor:
         cursor.execute(
@@ -258,3 +266,14 @@ def check_which_stocks_above_avg(stocks: list, stocks_close: dict, avg_selection
 
 def check_if_etf_valid(etf: str) -> bool:
     return check_etf_valid(etf)
+
+
+def remove_stock_from_watchlist(watchlist_session_data, stock_symbol: str):
+    """
+    Remove a stock's data from the session['watchlist_data'] based on its symbol.
+    :param stock_symbol: The stock symbol to remove.
+    """
+    for idx, stock_data in enumerate(watchlist_session_data):
+        if stock_data.get('symbol') == stock_symbol:
+            del watchlist_session_data[idx]
+            return watchlist_session_data

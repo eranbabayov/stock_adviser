@@ -22,7 +22,8 @@ def get_stock_data_from_yahoo(stocks: list[str], start_date: datetime, end_date:
 
     return data
 
-def get_last_day_stock_data(symbols):
+
+def get_last_day_stock_data(symbols) -> list[dict[str, any]]:
     stock_data = []
     for symbol in symbols:
         try:
@@ -44,7 +45,7 @@ def get_last_day_stock_data(symbols):
     return stock_data
 
 
-def get_stock_close(yahoo_stocks_data, requested_stocks: list[str]):
+def get_stock_close(yahoo_stocks_data, requested_stocks: list[str]) -> (dict, list[dict[str, any]]):
     stocks_close = {}
     stocks_data = []  # To store the stock data (last price, change, etc.)
     is_one_stock = False
