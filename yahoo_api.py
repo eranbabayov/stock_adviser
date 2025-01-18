@@ -62,7 +62,6 @@ def get_stock_close(yahoo_stocks_data, requested_stocks: list[str]) -> (dict, li
 
         stocks_close[stock] = sorted_stock_data
         stocks_data.append(get_last_day_stock_data([stock])[0])  # Get the stock data for the current stock
-
     return stocks_close, stocks_data
 
 def check_etf_valid(symbol: str) -> bool:

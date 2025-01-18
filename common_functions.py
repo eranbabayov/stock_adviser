@@ -268,6 +268,52 @@ def check_if_etf_valid(etf: str) -> bool:
     return check_etf_valid(etf)
 
 
+def add_new_trade(user_id: int, stock_etf: str, buy_price: float, buy_date: datetime,
+                  sell_date: datetime | None = None, sell_price: float | None = None):
+    """
+    Adds a new trade to the user_trades table.
+
+    :param user_id: ID of the user who made the trade.
+    :param stock_etf: The stock or ETF symbol.
+    :param buy_price: The price at which the stock/ETF was bought.
+    :param buy_date: The date the stock/ETF was bought.
+    :param sell_date: (Optional) The date the stock/ETF was sold.
+    :param sell_price: (Optional) The price at which the stock/ETF was sold.
+    """
+    query = '''
+        INSERT INTO user_trades (user_id, stock_etf, buy_price, buy_date, sell_date, sell_price)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    '''
+    values = (user_id, stock_etf, buy_price, buy_date, sell_date, sell_price)
+
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute(query, values)
+            conn.commit()
+            print("Trade added successfully.")
+    except Exception as e:
+        print(f"Error adding trade: {e}")
+
+
+def get_user_trades(user_id: int):
+    """
+    Fetches all trades for a given user.
+
+    :param user_id: The ID of the user whose trades are to be retrieved.
+    :return: A list of tuples containing trade records, or an empty list if none exist or an error occurs.
+    """
+    try:
+        with conn.cursor() as cursor:
+            # Correct SQL query with proper syntax
+            cursor.execute('SELECT * FROM user_trades WHERE user_id = %s', (user_id,))
+            # Fetch and return all matching rows
+            return cursor.fetchall()
+    except Exception as e:
+        print(f"Error fetching user trades: {e}")
+        return []  # Return an empty list in case of error
+
+
+
 def remove_stock_from_watchlist(watchlist_session_data, stock_symbol: str):
     """
     Remove a stock's data from the session['watchlist_data'] based on its symbol.

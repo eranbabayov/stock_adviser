@@ -37,6 +37,10 @@
         <input type="text" name="remove_stock" placeholder="Write stock ticker" required>
         <button class="button" type="submit">Remove stock</button>
     </form>
+    <form action="{{ url_for('user_trades') }}" method="GET" class="form-inline">
+        <button class="button" type="submit">Your Trades</button>
+    </form>
+
     <br><br>
     <div class="button-group">
         <a href="{{ url_for('logout') }}">
@@ -272,8 +276,8 @@ function hideGraphContainer() {
             .catch(error => console.error('Error updating stocks:', error));
     }
 
-    // Call updateStocks every 1 seconds
-    setInterval(updateStocks, 1000);
+    // Call updateStocks every 10 seconds
+    setInterval(updateStocks, 10000);
 </script>
 
 </body>

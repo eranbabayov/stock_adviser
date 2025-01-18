@@ -58,6 +58,12 @@ def login():
         user_added=request.args.get('user_added'), password_changed=request.args.get("password_changed"))
 
 
+@app.route('/dashboard', methods=['POST'])
+def dashboard():
+    return render_template('dashboard.html', username=session['username'], stocks=session['user_stocks'],
+                           watchlist=session['watchlist_data'])
+
+
 @app.route('/stocks_above_avg', methods=['POST'])
 def stocks_above_avg():
     avg_selection = request.form.getlist('avg_selection')
@@ -256,6 +262,29 @@ def live_stocks():
     user_stocks = session.get('user_stocks', [])
     stock_data = get_last_day_stock_data(user_stocks)
     return jsonify(stock_data)
+
+
+@app.route('/user_trades', methods=['GET'])
+def user_trades():
+    # Example list of stocks to update
+    user_trades = get_user_trades(session["user_id"])
+    return render_template('trades.html', user_trades=user_trades)\
+
+
+
+@app.route('/add_trade', methods=['POST'])
+def add_trade():
+    stock_etf = request.form['stock_etf']
+    buy_price = float(request.form['buy_price'])
+    buy_date = datetime.strptime(request.form['buy_date'], '%Y-%m-%d')
+    sell_price = float(request.form['sell_price']) if request.form['sell_price'] else None
+    sell_date = datetime.strptime(request.form['sell_date'], '%Y-%m-%d') if request.form['sell_date'] else None
+
+    # Add trade to database (replace with your actual DB code)
+    add_new_trade(user_id=session["user_id"], stock_etf=stock_etf, buy_price=buy_price, buy_date=buy_date,
+                  sell_date=sell_date, sell_price=sell_price)
+
+    return redirect(url_for('user_trades'))  # Redirect to the trades page after adding a new trade
 
 
 if __name__ == '__main__':
