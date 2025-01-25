@@ -41,7 +41,7 @@ def login():
                 stocks_close = {}
             else:
                 user_stocks = stocks[0]
-                stocks_close, watchlist_data = get_user_stocks_info(user_stocks)
+                stocks_close, watchlist_data = get_user_stocks_info(user_stocks, )
 
             session['watchlist_data'] = watchlist_data
             session['stocks_close'] = stocks_close

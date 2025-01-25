@@ -2,17 +2,28 @@
 
 ## Overview
 
-This project is a stock adviser tool that analyzes historical stock price data and provides insights into the
-performance of various stocks over a specified period. It utilizes the Yahoo Finance API to fetch historical stock price
-data and performs analysis to identify top-performing stocks based on certain criteria.
-
+The Stock Adviser Web Application is an advanced platform designed to help users manage and analyze their stock portfolios.
+With features ranging from stock tracking and analysis to trade management, the application provides a comprehensive toolset 
+for making informed investment decisions.
 ## Features
 
-- Fetches historical stock price data using the Yahoo Finance API.
-- Analyzes stock performance over a specified period.
-- Identifies top-performing stocks based on predefined criteria.
-- Generates plots to visualize stock performance trends.
+### User Management
+   - Secure Login & Registration
+   - Password Management: Password reset via email with secure tokens.
+### Stock Management
+   - Portfolio Tracking: Users can add or remove stocks from their portfolios.
 
+   - Stock Watchlist: Automatically updates based on user-selected stocks.
+
+   - Performance Analysis: Tracks moving averages (20, 50, 150, 200-day) for each stock.
+
+### Trade Management
+   - Trade Recording: Users can log trades with buy/sell prices and dates.
+   - Trade History: Displays a detailed record of all user trades.
+
+### Stock Analysis
+   - Live Stock Updates: Fetches real-time data for stocks in the user’s portfolio.
+   - Performance Insights: Identifies stocks performing above specific moving averages.
 ## Installation
 
 1. Clone the repository:
@@ -24,23 +35,12 @@ data and performs analysis to identify top-performing stocks based on certain cr
     pip install -r requirements.txt
     ```
 
-## Usage
-
-1. Run the `stock_adviser.py` script to execute the stock adviser tool:
-    ```
-    python stock_adviser.py
-    ```
-2. Follow the prompts to specify the scanning days and other parameters.
-3. The tool will fetch historical stock price data, analyze the performance of various stocks, and generate
-   visualizations to aid in decision-making.
-
 ## Dependencies
 
-- yfinance
-- pandas
-- matplotlib
+   - Flask
 
-## Contributing
+   - Flask-Mail
 
-Contributions are welcome! If you'd like to contribute to this project, please fork the repository and submit a pull
-request with your changes.
+   - yfinance
+
+   - hashlib
